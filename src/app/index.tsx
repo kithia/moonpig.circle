@@ -16,23 +16,29 @@ const CARD = '#ffffff';
 const BACKGROUND = '#f7f8fa';
 
 const steps: FlowStep[] = ['basket', 'about', 'circle', 'message', 'matched', 'result'];
+const progressSteps: FlowStep[] = ['about', 'circle', 'message'];
 
 function Header({ step }: { step: FlowStep }) {
-  const index = steps.indexOf(step);
-  const progress = Math.max(16, ((index + 1) / steps.length) * 100);
   const isBasket = step === 'basket';
+  const progressIndex = progressSteps.indexOf(step);
+  const showProgress = progressIndex !== -1;
+  const progress = ((progressIndex + 1) / progressSteps.length) * 100;
 
   return (
     <View style={styles.header}>
       <View style={styles.headerRow}>
         <Text style={styles.menu}>☰</Text>
-        <Text style={styles.logo}>moonpig</Text>
-      </View>
-      {isBasket ? (
-        <View style={styles.searchWrap}>
-          <Text style={styles.searchText}>Search...</Text>
+        <ExpoImage source={require('../../assets/designs/Moonpig.svg')} style={styles.logo} contentFit="contain" />
+        <View style={styles.headerActions}>
+          <ExpoImage source={require('../../assets/designs/Calendar.svg')} style={styles.headerActionIcon} contentFit="contain" />
+          <ExpoImage source={require('../../assets/designs/Basket(1).svg')} style={styles.headerActionIcon} contentFit="contain" />
         </View>
-      ) : (
+      </View>
+
+      <View style={styles.searchWrap}>
+        <Text style={styles.searchText}>Search...</Text>
+      </View>
+      {showProgress && (
         <View style={styles.progressTrack}>
           <View style={[styles.progress, { width: `${progress}%` }]} />
         </View>
@@ -202,7 +208,7 @@ function About({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const [isGuidelinesAccepted, setGuidelinesAccepted] = useState(false);
 
   return (
-    <Screen onBack={onBack} eyebrow="Step 1 of 4" title="About Moonpig Circle">
+    <Screen onBack={onBack} eyebrow="Step 1 of 3" title="About Moonpig Circle">
       <Text style={styles.body}>
         A small act of kindness can make someone&apos;s day. Moonpig Circle matches people who
         want to send a card with someone who needs a little cheer.
@@ -249,18 +255,18 @@ function About({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   );
 }
 
-function ChooseCard({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+function ChooseCard({ onNext, onBack, onBasket }: { onNext: () => void; onBack: () => void; onBasket: () => void }) {
   const [selectedCard, setSelectedCard] = useState(0);
   const cards = [
+    { title: 'Christmas Cheer', image: require('../../assets/designs/Christmas Cheer.png') },
     { title: 'Winter Wishes', image: require('../../assets/designs/Winter Wishes.png') },
     { title: 'Sunshine Holiday', image: require('../../assets/designs/Sunshine Holiday.png') },
     { title: 'Postcard from Away', image: require('../../assets/designs/Postcard from Away.png') },
-    { title: 'Christmas Cheer', image: require('../../assets/designs/Christmas Cheer.png') },
   ];
 
   return (
-    <Screen onBack={onBack} eyebrow="Step 2 of 4" title="Choose your Circle card">
-      <Text style={styles.body}>Pick a card that feels right. Your words will be added next.</Text>
+    <Screen onBack={onBack} eyebrow="Step 2 of 3" title="Choose your Circle card">
+      <Text style={styles.body}>Select a friendly card template. All cards are pre-designed curated illustrations</Text>
 
       <View style={styles.cardGrid}>
         {cards.map((card, index) => {
@@ -286,17 +292,21 @@ function ChooseCard({ onNext, onBack }: { onNext: () => void; onBack: () => void
         })}
       </View>
 
-      <Pressable onPress={onBack} style={styles.fullWidthSecondaryButton}>
+      <Pressable onPress={onBasket} style={styles.fullWidthSecondaryButton}>
         <Text style={styles.secondaryButtonText}>Not now</Text>
       </Pressable>
       <PrimaryButton onPress={onNext}>Continue</PrimaryButton>
+        <View style={styles.cardDisclaimerRow}>
+          <ExpoImage source={require('../../assets/designs/info.svg')} style={styles.cardDisclaimerIcon} contentFit="contain" />
+          <Text style={styles.cardDisclaimer}>Curated illustrations only - no photo uploads.</Text>
+        </View>
     </Screen>
   );
 }
 
 function WriteMessage({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   return (
-    <Screen onBack={onBack} eyebrow="Step 3 of 4" title="Write your message">
+    <Screen onBack={onBack} eyebrow="Step 3 of 3" title="Write your message">
       <Text style={styles.body}>Say something kind. Your message will be sent anonymously.</Text>
       <Text style={styles.label}>To someone in the North West</Text>
 
@@ -319,7 +329,7 @@ function WriteMessage({ onNext, onBack }: { onNext: () => void; onBack: () => vo
 
 function Matched({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   return (
-    <Screen onBack={onBack} eyebrow="Step 4 of 4" title="Circle card matched">
+    <Screen onBack={onBack} title="Circle card matched">
       <View style={styles.matchPanel}>
         <Text style={styles.matchTitle}>Circle card matched to your order</Text>
         <CardArt />
@@ -367,7 +377,7 @@ export default function HomeScreen() {
         <Header step={step} />
         {step === 'basket' && <Basket onNext={next} />}
         {step === 'about' && <About onNext={next} onBack={previous} />}
-        {step === 'circle' && <ChooseCard onNext={next} onBack={previous} />}
+        {step === 'circle' && <ChooseCard onNext={next} onBack={previous} onBasket={() => setStep('basket')} />}
         {step === 'message' && <WriteMessage onNext={next} onBack={previous} />}
         {step === 'matched' && <Matched onNext={next} onBack={previous} />}
         {step === 'result' && <Result onBack={previous} />}
@@ -436,19 +446,20 @@ const styles = StyleSheet.create({
   },
   logo: {
     position: 'absolute',
-    left: 0,
-    right: 0,
-    textAlign: 'center',
-    color: PINK,
-    fontSize: 23,
-    fontFamily: 'Moonpig-Bold',
-    letterSpacing: -0.8,
+    width: 96,
+    height: 32,
+    left: '50%',
+    marginLeft: -48,
   },
   headerActions: {
     marginLeft: 'auto',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    gap: 8,
+  },
+  headerActionIcon: {
+    width: 36,
+    height: 36,
   },
   headerIcon: {
     color: INK,
@@ -943,6 +954,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 18,
+  },
+  cardDisclaimer: {
+    color: GREY,
+    fontSize: 11,
+    lineHeight: 16,
+    fontFamily: 'Moonpig-Regular',
+    marginTop: -4,
+    },
+    cardDisclaimerRow: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 5,
+      marginTop: -4,
+    },
+    cardDisclaimerIcon: {
+      width: 14,
+      height: 14,
   },
   optionCard: {
     backgroundColor: CARD,
