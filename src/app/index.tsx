@@ -20,6 +20,9 @@ const progressSteps: FlowStep[] = ['about', 'circle', 'message'];
 
 function Header({ step }: { step: FlowStep }) {
   const isBasket = step === 'basket';
+  const basketIcon = step === 'matched'
+    ? require('../../assets/designs/Basket(2).svg')
+    : require('../../assets/designs/Basket(1).svg');
   const progressIndex = progressSteps.indexOf(step);
   const showProgress = progressIndex !== -1;
   const progress = ((progressIndex + 1) / progressSteps.length) * 100;
@@ -31,7 +34,7 @@ function Header({ step }: { step: FlowStep }) {
         <ExpoImage source={require('../../assets/designs/Moonpig.svg')} style={styles.logo} contentFit="contain" />
         <View style={styles.headerActions}>
           <ExpoImage source={require('../../assets/designs/Calendar.svg')} style={styles.headerActionIcon} contentFit="contain" />
-          <ExpoImage source={require('../../assets/designs/Basket(1).svg')} style={styles.headerActionIcon} contentFit="contain" />
+          <ExpoImage source={basketIcon} style={styles.headerActionIcon} contentFit="contain" />
         </View>
       </View>
 
@@ -345,53 +348,72 @@ function WriteMessage({ onNext, onBack }: { onNext: () => void; onBack: () => vo
   );
 }
 
-function Matched({ onNext, onBack, cardImage }: { onNext: () => void; onBack: () => void; cardImage: number }) {
+function Matched({ cardImage }: { cardImage: number }) {
   return (
-    <View style={styles.confirmationScreen}>
-      <View style={styles.confirmationBanner}>
-        <Pressable onPress={onBack} hitSlop={12} style={styles.confirmationBack}>
-          <ExpoImage source={require('../../assets/designs/Circle Card Confirmation/circle-x.svg')} style={styles.confirmationBackIcon} contentFit="contain" />
-        </Pressable>
-        <Text style={styles.confirmationBannerTitle}>Circle card added to your order</Text>
+    <View style={styles.circleBasketScreen}>
+      <View style={styles.circleAddedBanner}>
+        <ExpoImage source={require('../../assets/designs/Basket with Circle Card/badge-check.svg')} style={styles.circleAddedIcon} contentFit="contain" />
+        <Text style={styles.circleAddedText}>Circle card added to your basket</Text>
       </View>
 
-      <ExpoImage source={cardImage} style={styles.confirmationCardImage} contentFit="cover" />
-
-      <View style={styles.confirmationMessage}>
-        <Text style={styles.confirmationMessageTitle}>Your Circle card will be matched within 48 hours</Text>
-        <Text style={[styles.muted, styles.confirmationMessageMuted]}>We&apos;ll keep you updated on your order status.</Text>
-      </View>
-
-      <View style={styles.confirmationSuccess}>
-        <ExpoImage source={require('../../assets/designs/Circle Card Confirmation/Vector.svg')} style={styles.confirmationSuccessIcon} contentFit="contain" />
-        <Text style={styles.confirmationSuccessText}>Your address stays private</Text>
-      </View>
-
-      <View style={styles.confirmationInfoCard}>
-        <View style={styles.confirmationInfoRow}>
-          <ExpoImage source={require('../../assets/designs/Circle Card Confirmation/tick.svg')} style={styles.confirmationInfoIcon} contentFit="contain" />
-          <View style={styles.confirmationInfoCopy}>
-            <Text style={styles.confirmationInfoTitle}>Card sent & approved</Text>
-            <Text style={styles.muted}>Today at {new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}</Text>
-          </View>
+      <View style={styles.circleBasketItem}>
+        <View style={styles.cardThumbWrap}>
+          <Image source={require('../../assets/designs/Basket/Harry Potter.jpg')} resizeMode="cover" style={styles.cardThumb} />
         </View>
-        <View style={styles.confirmationInfoRow}>
-          <ExpoImage source={require('../../assets/designs/Circle Card Confirmation/blue.svg')} style={styles.confirmationInfoIcon} contentFit="contain" />
-          <View style={styles.confirmationInfoCopy}>
-            <Text style={styles.confirmationInfoTitle}>Matching with stranger</Text>
-            <Text style={styles.muted}>Within 48 hours</Text>
-          </View>
-        </View>
-        <View style={styles.confirmationInfoRow}>
-          <ExpoImage source={require('../../assets/designs/Circle Card Confirmation/grey.svg')} style={styles.confirmationInfoIcon} contentFit="contain" />
-          <View style={styles.confirmationInfoCopy}>
-            <Text style={styles.confirmationInfoTitleMuted}>Card delivered safely</Text>
-            <Text style={styles.muted}>Pending delivery</Text>
+        <View style={styles.itemCopy}>
+          <Text style={styles.itemTitle}>Harry Potter Birthday Card</Text>
+          <Text style={styles.muted}>To: Sarah</Text>
+          <Text style={styles.muted}>Standard delivery · 1st Class</Text>
+          <View style={styles.itemMetaRow}>
+            <Text style={styles.price}>£6.99</Text>
+            <Text style={styles.inlineLink}>Edit</Text>
+            <Text style={styles.inlineLink}>Remove</Text>
           </View>
         </View>
       </View>
 
-      <PrimaryButton onPress={onNext}>Back to your Order</PrimaryButton>
+      <View style={styles.circleBasketItem}>
+        <View style={styles.cardThumbWrap}>
+          <ExpoImage source={cardImage} resizeMode="cover" style={styles.cardThumb} contentFit="cover" />
+        </View>
+        <View style={styles.itemCopy}>
+          <Text style={styles.itemTitle}>Moonpig Circle card</Text>
+          <Text style={styles.muted}>To: Someone in the North West</Text>
+          <Text style={styles.muted}>Matched within 48 hours</Text>
+          <View style={styles.itemMetaRow}>
+            <Text style={styles.price}>£1.99</Text>
+            <Text style={styles.inlineLink}>Edit</Text>
+            <Text style={styles.inlineLink}>Remove</Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.deliverySelector}>
+        <Text style={styles.deliveryTitle}>Delivery</Text>
+        <View style={styles.deliveryOption}>
+          <View style={styles.deliveryCheck}><Text style={styles.deliveryCheckText}>✓</Text></View>
+          <View style={styles.deliveryCopy}>
+            <Text style={styles.deliveryOptionTitle}>Standard delivery</Text>
+            <Text style={styles.muted}>Calculated at checkout</Text>
+          </View>
+          <Text style={styles.deliveryChevron}>›</Text>
+        </View>
+      </View>
+
+      <View style={styles.circleBasketPromo}>
+        <Text style={styles.circleBasketPromoTitle}>Moonpig Circle</Text>
+        <Text style={styles.circleBasketPromoBody}>A little kindness can make someone&apos;s day.</Text>
+        <Text style={styles.circleBasketPromoText}>Your card will be sent anonymously to someone in the community.</Text>
+      </View>
+
+      <View style={styles.circleBasketSummary}>
+        <View style={styles.totalRow}><Text style={styles.muted}>Items total</Text><Text style={styles.price}>£8.98</Text></View>
+        <View style={styles.totalRow}><Text style={styles.muted}>Postage costs</Text><Text style={styles.muted}>Calculated at checkout</Text></View>
+        <View style={styles.summaryRule} />
+        <View style={styles.totalRow}><Text style={styles.totalLabel}>Total</Text><Text style={styles.totalLabel}>£8.98</Text></View>
+      </View>
+
+      <PrimaryButton disabled>Checkout</PrimaryButton>
     </View>
   );
 }
@@ -430,7 +452,7 @@ export default function HomeScreen() {
         {step === 'about' && <About onNext={next} onBack={previous} />}
         {step === 'circle' && <ChooseCard onNext={chooseCircleCard} onBack={previous} onBasket={() => setStep('basket')} />}
         {step === 'message' && <WriteMessage onNext={next} onBack={previous} />}
-        {step === 'matched' && <Matched onNext={next} onBack={previous} cardImage={selectedCircleCard} />}
+        {step === 'matched' && <Matched cardImage={selectedCircleCard} />}
         {step === 'result' && <Result onBack={previous} />}
       </ScrollView>
     </SafeAreaView>
@@ -583,6 +605,145 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 18,
     gap: 14,
+  },
+  circleBasketScreen: {
+    backgroundColor: BACKGROUND,
+    gap: 0,
+    paddingBottom: 24,
+  },
+  circleAddedBanner: {
+    backgroundColor: '#ebfdf5',
+    minHeight: 41,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#10794f',
+  },
+  circleAddedIcon: {
+    width: 18,
+    height: 18,
+  },
+  circleAddedText: {
+    color: '#10794f',
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: 'Moonpig-Bold',
+  },
+  circleBasketItem: {
+    backgroundColor: '#fff',
+    minHeight: 122,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: LINE,
+  },
+  deliverySelector: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    gap: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: LINE,
+  },
+  deliveryTitle: {
+    color: INK,
+    fontSize: 16,
+    lineHeight: 22,
+    fontFamily: 'Moonpig-Bold',
+  },
+  deliveryOption: {
+    borderWidth: 2,
+    borderColor: BLUE,
+    borderRadius: 8,
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  deliveryCheck: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: BLUE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  deliveryCheckText: {
+    color: '#fff',
+    fontSize: 13,
+    lineHeight: 16,
+    fontFamily: 'Moonpig-Bold',
+  },
+  deliveryCopy: {
+    flex: 1,
+    gap: 2,
+  },
+  deliveryOptionTitle: {
+    color: INK,
+    fontSize: 14,
+    lineHeight: 20,
+    fontFamily: 'Moonpig-Bold',
+  },
+  deliveryChevron: {
+    color: BLUE,
+    fontSize: 24,
+    lineHeight: 24,
+    fontFamily: 'Moonpig-Regular',
+  },
+  circleBasketPromo: {
+    backgroundColor: PINK_SOFT,
+    margin: 16,
+    padding: 16,
+    borderWidth: 2,
+    borderColor: '#c22f50',
+    borderRadius: 8,
+    gap: 8,
+  },
+  circleBasketPromoTitle: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#f9c406',
+    color: INK,
+    borderRadius: 15,
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+    fontSize: 14,
+    lineHeight: 16,
+    fontFamily: 'Moonpig-Bold',
+  },
+  circleBasketPromoBody: {
+    color: INK,
+    fontSize: 18,
+    lineHeight: 24,
+    fontFamily: 'Moonpig-Bold',
+  },
+  circleBasketPromoText: {
+    color: INK,
+    fontSize: 13,
+    lineHeight: 19,
+    fontFamily: 'Moonpig-Regular',
+  },
+  circleBasketSummary: {
+    backgroundColor: '#fff',
+    marginTop: -2,
+    paddingHorizontal: 16,
+    paddingVertical: 18,
+    gap: 10,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: LINE,
+  },
+  summaryRule: {
+    height: 1,
+    backgroundColor: LINE,
+    marginVertical: 2,
+  },
+  circleBasketBack: {
+    alignItems: 'center',
+    paddingVertical: 16,
   },
   basketHeaderRow: {
     flexDirection: 'row',
