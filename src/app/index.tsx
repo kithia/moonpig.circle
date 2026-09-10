@@ -361,7 +361,7 @@ function WriteMessage({ onNext, onBack }: { onNext: () => void; onBack: () => vo
   );
 }
 
-function Matched({ cardImage }: { cardImage: number }) {
+function Matched({ cardImage, onCheckout }: { cardImage: number; onCheckout: () => void }) {
   return (
     <View style={styles.circleBasketScreen}>
       <View style={styles.circleAddedBanner}>
@@ -431,24 +431,53 @@ function Matched({ cardImage }: { cardImage: number }) {
         <Text style={styles.discountChevron}>›</Text>
       </Pressable>
 
-      <PrimaryButton disabled>Checkout</PrimaryButton>
+      <PrimaryButton onPress={onCheckout}>Checkout</PrimaryButton>
     </View>
   );
 }
 
-function Result({ onBack }: { onBack: () => void }) {
+function Result({ onBack, cardImage }: { onBack: () => void; cardImage: number }) {
   return (
-    <Screen onBack={onBack} title="Thank you for sending a little kindness">
-      <View style={styles.resultCard}>
-        <Text style={styles.resultTag}>FROM MAYA · THE NORTH WEST</Text>
-        <Text style={styles.resultTitle}>Hi friend! It&apos;s lovely seeing people look out for one another.</Text>
-        <Text style={styles.muted}>
-          Your card made someone&apos;s day. Thank you for being part of Moonpig Circle.
-        </Text>
-        <Text style={styles.resultHeart}>♡</Text>
+    <View style={styles.orderSummaryScreen}>
+      <View style={styles.orderSummaryBanner}>
+        <View style={styles.orderSummaryBannerIconWrap}>
+          <ExpoImage source={require('../../assets/designs/Order confirmation/mail-open.svg')} style={styles.orderSummaryBannerIcon} contentFit="contain" />
+        </View>
+        <Text style={styles.orderSummaryBannerTitle}>Order confirmed</Text>
       </View>
-      <PrimaryButton onPress={onBack}>Send another card</PrimaryButton>
-    </Screen>
+
+      <View style={styles.orderSummaryContent}>
+        <Text style={styles.orderSummaryEyebrow}>ORDER SUMMARY</Text>
+        <Text style={styles.orderSummaryTitle}>Thank you for sending a little kindness</Text>
+        <Text style={styles.orderSummaryBody}>Your Circle card is on its way to someone who needs a little cheer.</Text>
+
+        <ExpoImage source={cardImage} style={styles.orderSummaryCardImage} contentFit="cover" />
+
+        <View style={styles.orderSummaryPrivacy}>
+          <ExpoImage source={require('../../assets/designs/Order confirmation/shield-check.svg')} style={styles.orderSummaryPrivacyIcon} contentFit="contain" />
+          <Text style={styles.orderSummaryPrivacyText}>Your address stays private</Text>
+        </View>
+
+        <View style={styles.orderSummaryInfoCard}>
+          <View style={styles.orderSummaryInfoRow}>
+            <ExpoImage source={require('../../assets/designs/Order confirmation/help-circle.svg')} style={styles.orderSummaryInfoIcon} contentFit="contain" />
+            <View style={styles.orderSummaryInfoCopy}>
+              <Text style={styles.orderSummaryInfoTitle}>What happens next?</Text>
+              <Text style={styles.muted}>We&apos;ll match your card with someone in the community and keep you updated.</Text>
+            </View>
+          </View>
+          <View style={styles.orderSummaryInfoRow}>
+            <ExpoImage source={require('../../assets/designs/Order confirmation/shield-check.svg')} style={styles.orderSummaryInfoIcon} contentFit="contain" />
+            <View style={styles.orderSummaryInfoCopy}>
+              <Text style={styles.orderSummaryInfoTitle}>Sent safely and anonymously</Text>
+              <Text style={styles.muted}>No personal details are shared with the recipient.</Text>
+            </View>
+          </View>
+        </View>
+
+        <PrimaryButton onPress={onBack}>Back to your order</PrimaryButton>
+      </View>
+    </View>
   );
 }
 
@@ -470,8 +499,8 @@ export default function HomeScreen() {
         {step === 'about' && <About onNext={next} onBack={previous} />}
         {step === 'circle' && <ChooseCard onNext={chooseCircleCard} onBack={previous} onBasket={() => setStep('basket')} />}
         {step === 'message' && <WriteMessage onNext={next} onBack={previous} />}
-        {step === 'matched' && <Matched cardImage={selectedCircleCard} />}
-        {step === 'result' && <Result onBack={previous} />}
+        {step === 'matched' && <Matched cardImage={selectedCircleCard} onCheckout={next} />}
+        {step === 'result' && <Result onBack={previous} cardImage={selectedCircleCard} />}
       </ScrollView>
     </SafeAreaView>
   );
@@ -1610,6 +1639,119 @@ const styles = StyleSheet.create({
     gap: 16,
     borderWidth: 1,
     borderColor: '#eceef2',
+  },
+  orderSummaryScreen: {
+    backgroundColor: BACKGROUND,
+    paddingBottom: 28,
+  },
+  orderSummaryBanner: {
+    minHeight: 56,
+    backgroundColor: '#ffa6b6',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: '#ffa6b6',
+  },
+  orderSummaryBannerIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  orderSummaryBannerIcon: {
+    width: 16,
+    height: 16,
+  },
+  orderSummaryBannerTitle: {
+    color: '#fff',
+    fontSize: 20,
+    lineHeight: 26,
+    marginLeft: 12,
+    fontFamily: 'Moonpig-Bold',
+  },
+  orderSummaryContent: {
+    paddingHorizontal: 16,
+    paddingTop: 24,
+    gap: 14,
+    alignItems: 'center',
+  },
+  orderSummaryEyebrow: {
+    color: BLUE,
+    fontSize: 12,
+    lineHeight: 16,
+    letterSpacing: 1.2,
+    fontFamily: 'Moonpig-Bold',
+  },
+  orderSummaryTitle: {
+    color: INK,
+    fontSize: 26,
+    lineHeight: 32,
+    textAlign: 'center',
+    fontFamily: 'Moonpig-Bold',
+  },
+  orderSummaryBody: {
+    color: GREY,
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    fontFamily: 'Moonpig-Regular',
+  },
+  orderSummaryCardImage: {
+    width: 202,
+    height: 253,
+    borderRadius: 4,
+    marginVertical: 4,
+  },
+  orderSummaryPrivacy: {
+    backgroundColor: '#ebfdf5',
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  orderSummaryPrivacyIcon: {
+    width: 14,
+    height: 14,
+  },
+  orderSummaryPrivacyText: {
+    color: '#10794f',
+    fontSize: 12,
+    lineHeight: 16,
+    fontFamily: 'Moonpig-Bold',
+  },
+  orderSummaryInfoCard: {
+    alignSelf: 'stretch',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    gap: 16,
+    borderWidth: 1,
+    borderColor: '#f0f1f3',
+  },
+  orderSummaryInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+  },
+  orderSummaryInfoIcon: {
+    width: 16,
+    height: 16,
+    marginTop: 2,
+  },
+  orderSummaryInfoCopy: {
+    flex: 1,
+    gap: 4,
+  },
+  orderSummaryInfoTitle: {
+    color: INK,
+    fontSize: 14,
+    lineHeight: 20,
+    fontFamily: 'Moonpig-Bold',
   },
   resultTag: {
     color: PINK,
