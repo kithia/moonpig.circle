@@ -103,7 +103,7 @@ function Basket({ onNext }: { onNext: () => void }) {
       <View style={styles.basketItem}>
         <View style={styles.cardThumbWrap}>
           <Image
-            source={require('../../assets/designs/Harry Potter.jpg')}
+            source={require('../../assets/designs/Basket/Harry Potter.jpg')}
             resizeMode="cover"
             style={styles.cardThumb}
           />
@@ -216,14 +216,14 @@ function About({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
 
       <View style={styles.infoCard}>
         <View style={styles.infoRow}>
-          <ExpoImage source={require('../../assets/designs/Lock-icon.svg')} style={styles.infoIcon} contentFit="contain" />
+          <ExpoImage source={require('../../assets/designs/About Moonpig Circle/Lock-icon.svg')} style={styles.infoIcon} contentFit="contain" />
           <View style={styles.infoCopy}>
             <Text style={styles.infoTitle}>A card with a purpose</Text>
             <Text style={styles.muted}>Your card will be sent anonymously to someone in the community.</Text>
           </View>
         </View>
         <View style={styles.infoRow}>
-          <ExpoImage source={require('../../assets/designs/Cross-icon.svg')} style={styles.infoIcon} contentFit="contain" />
+          <ExpoImage source={require('../../assets/designs/About Moonpig Circle/Cross-icon.svg')} style={styles.infoIcon} contentFit="contain" />
           <View style={styles.infoCopy}>
             <Text style={styles.infoTitle}>No personal details shared</Text>
             <Text style={styles.muted}>Keep your connection kind, private, and anonymous.</Text>
@@ -258,10 +258,10 @@ function About({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
 function ChooseCard({ onNext, onBack, onBasket }: { onNext: () => void; onBack: () => void; onBasket: () => void }) {
   const [selectedCard, setSelectedCard] = useState(0);
   const cards = [
-    { title: 'Christmas Cheer', image: require('../../assets/designs/Christmas Cheer.png') },
-    { title: 'Winter Wishes', image: require('../../assets/designs/Winter Wishes.png') },
-    { title: 'Sunshine Holiday', image: require('../../assets/designs/Sunshine Holiday.png') },
-    { title: 'Postcard from Away', image: require('../../assets/designs/Postcard from Away.png') },
+    { title: 'Christmas Cheer', image: require('../../assets/designs/Choose your Circle card/Christmas Cheer.png') },
+    { title: 'Winter Wishes', image: require('../../assets/designs/Choose your Circle card/Winter Wishes.png') },
+    { title: 'Sunshine Holiday', image: require('../../assets/designs/Choose your Circle card/Sunshine Holiday.png') },
+    { title: 'Postcard from Away', image: require('../../assets/designs/Choose your Circle card/Postcard from Away.png') },
   ];
 
   return (
@@ -297,7 +297,7 @@ function ChooseCard({ onNext, onBack, onBasket }: { onNext: () => void; onBack: 
       </Pressable>
       <PrimaryButton onPress={onNext}>Continue</PrimaryButton>
         <View style={styles.cardDisclaimerRow}>
-          <ExpoImage source={require('../../assets/designs/info.svg')} style={styles.cardDisclaimerIcon} contentFit="contain" />
+          <ExpoImage source={require('../../assets/designs/Choose your Circle card/info.svg')} style={styles.cardDisclaimerIcon} contentFit="contain" />
           <Text style={styles.cardDisclaimer}>Curated illustrations only - no photo uploads.</Text>
         </View>
     </Screen>
