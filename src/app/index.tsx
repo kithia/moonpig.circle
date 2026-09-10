@@ -17,6 +17,12 @@ const BACKGROUND = '#f7f8fa';
 
 const steps: FlowStep[] = ['basket', 'about', 'circle', 'message', 'matched', 'result'];
 const progressSteps: FlowStep[] = ['about', 'circle', 'message'];
+const circleCardImages = [
+  require('../../assets/designs/Choose your Circle card/Christmas Cheer.png'),
+  require('../../assets/designs/Choose your Circle card/Winter Wishes.png'),
+  require('../../assets/designs/Choose your Circle card/Sunshine Holiday.png'),
+  require('../../assets/designs/Choose your Circle card/Postcard from Away.png'),
+];
 
 function Header({ step }: { step: FlowStep }) {
   const isBasket = step === 'basket';
@@ -261,10 +267,10 @@ function About({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
 function ChooseCard({ onNext, onBack, onBasket }: { onNext: (cardImage: number) => void; onBack: () => void; onBasket: () => void }) {
   const [selectedCard, setSelectedCard] = useState(0);
   const cards = [
-    { title: 'Christmas Cheer', image: require('../../assets/designs/Choose your Circle card/Christmas Cheer.png') },
-    { title: 'Winter Wishes', image: require('../../assets/designs/Choose your Circle card/Winter Wishes.png') },
-    { title: 'Sunshine Holiday', image: require('../../assets/designs/Choose your Circle card/Sunshine Holiday.png') },
-    { title: 'Postcard from Away', image: require('../../assets/designs/Choose your Circle card/Postcard from Away.png') },
+    { title: 'Christmas Cheer', image: circleCardImages[0] },
+    { title: 'Winter Wishes', image: circleCardImages[1] },
+    { title: 'Sunshine Holiday', image: circleCardImages[2] },
+    { title: 'Postcard from Away', image: circleCardImages[3] },
   ];
 
   return (
@@ -485,6 +491,7 @@ function Result({ onBack, cardImage }: { onBack: () => void; cardImage: number }
 export default function HomeScreen() {
   const [step, setStep] = useState<FlowStep>('basket');
   const [selectedCircleCard, setSelectedCircleCard] = useState<number>(require('../../assets/designs/Choose your Circle card/Christmas Cheer.png'));
+  const [resultCard] = useState<number>(() => circleCardImages[Math.floor(Math.random() * circleCardImages.length)]);
   const next = () => setStep(steps[Math.min(steps.indexOf(step) + 1, steps.length - 1)]);
   const previous = () => setStep(steps[Math.max(steps.indexOf(step) - 1, 0)]);
   const chooseCircleCard = (cardImage: number) => {
@@ -501,7 +508,7 @@ export default function HomeScreen() {
         {step === 'circle' && <ChooseCard onNext={chooseCircleCard} onBack={previous} onBasket={() => setStep('basket')} />}
         {step === 'message' && <WriteMessage onNext={next} onBack={previous} />}
         {step === 'matched' && <Matched cardImage={selectedCircleCard} onCheckout={next} />}
-        {step === 'result' && <Result onBack={previous} cardImage={selectedCircleCard} />}
+        {step === 'result' && <Result onBack={previous} cardImage={resultCard} />}
       </ScrollView>
     </SafeAreaView>
   );
