@@ -255,7 +255,7 @@ function About({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   );
 }
 
-function ChooseCard({ onNext, onBack, onBasket }: { onNext: () => void; onBack: () => void; onBasket: () => void }) {
+function ChooseCard({ onNext, onBack, onBasket }: { onNext: (cardImage: number) => void; onBack: () => void; onBasket: () => void }) {
   const [selectedCard, setSelectedCard] = useState(0);
   const cards = [
     { title: 'Christmas Cheer', image: require('../../assets/designs/Choose your Circle card/Christmas Cheer.png') },
@@ -295,7 +295,7 @@ function ChooseCard({ onNext, onBack, onBasket }: { onNext: () => void; onBack: 
       <Pressable onPress={onBasket} style={styles.fullWidthSecondaryButton}>
         <Text style={styles.secondaryButtonText}>Not now</Text>
       </Pressable>
-      <PrimaryButton onPress={onNext}>Continue</PrimaryButton>
+      <PrimaryButton onPress={() => onNext(cards[selectedCard].image)}>Continue</PrimaryButton>
         <View style={styles.cardDisclaimerRow}>
           <ExpoImage source={require('../../assets/designs/Choose your Circle card/info.svg')} style={styles.cardDisclaimerIcon} contentFit="contain" />
           <Text style={styles.cardDisclaimer}>Curated illustrations only - no photo uploads.</Text>
@@ -345,26 +345,54 @@ function WriteMessage({ onNext, onBack }: { onNext: () => void; onBack: () => vo
   );
 }
 
-function Matched({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+function Matched({ onNext, onBack, cardImage }: { onNext: () => void; onBack: () => void; cardImage: number }) {
   return (
-    <Screen onBack={onBack} title="Circle card matched">
-      <View style={styles.matchPanel}>
-        <Text style={styles.matchTitle}>Circle card matched to your order</Text>
-        <CardArt />
-        <Text style={styles.matchHeadline}>We&apos;ll keep an eye on it</Text>
-        <Text style={styles.muted}>
-          Your kind words are on their way. We&apos;ll let you know when your card has been received.
-        </Text>
+    <View style={styles.confirmationScreen}>
+      <View style={styles.confirmationBanner}>
+        <Pressable onPress={onBack} hitSlop={12} style={styles.confirmationBack}>
+          <ExpoImage source={require('../../assets/designs/Circle Card Confirmation/circle-x.svg')} style={styles.confirmationBackIcon} contentFit="contain" />
+        </Pressable>
+        <Text style={styles.confirmationBannerTitle}>Circle card added to your order</Text>
       </View>
 
-      <View style={styles.checkList}>
-        <Text style={styles.listItem}>✓ Card sent as promised</Text>
-        <Text style={styles.listItem}>✓ No personal details shared</Text>
-        <Text style={styles.listItem}>✓ Helped brighten someone&apos;s day</Text>
+      <ExpoImage source={cardImage} style={styles.confirmationCardImage} contentFit="cover" />
+
+      <View style={styles.confirmationMessage}>
+        <Text style={styles.confirmationMessageTitle}>Your Circle card will be matched within 48 hours</Text>
+        <Text style={[styles.muted, styles.confirmationMessageMuted]}>We&apos;ll keep you updated on your order status.</Text>
       </View>
 
-      <PrimaryButton onPress={onNext}>Back to your order</PrimaryButton>
-    </Screen>
+      <View style={styles.confirmationSuccess}>
+        <ExpoImage source={require('../../assets/designs/Circle Card Confirmation/Vector.svg')} style={styles.confirmationSuccessIcon} contentFit="contain" />
+        <Text style={styles.confirmationSuccessText}>Your address stays private</Text>
+      </View>
+
+      <View style={styles.confirmationInfoCard}>
+        <View style={styles.confirmationInfoRow}>
+          <ExpoImage source={require('../../assets/designs/Circle Card Confirmation/tick.svg')} style={styles.confirmationInfoIcon} contentFit="contain" />
+          <View style={styles.confirmationInfoCopy}>
+            <Text style={styles.confirmationInfoTitle}>Card sent & approved</Text>
+            <Text style={styles.muted}>Today at {new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}</Text>
+          </View>
+        </View>
+        <View style={styles.confirmationInfoRow}>
+          <ExpoImage source={require('../../assets/designs/Circle Card Confirmation/blue.svg')} style={styles.confirmationInfoIcon} contentFit="contain" />
+          <View style={styles.confirmationInfoCopy}>
+            <Text style={styles.confirmationInfoTitle}>Matching with stranger</Text>
+            <Text style={styles.muted}>Within 48 hours</Text>
+          </View>
+        </View>
+        <View style={styles.confirmationInfoRow}>
+          <ExpoImage source={require('../../assets/designs/Circle Card Confirmation/grey.svg')} style={styles.confirmationInfoIcon} contentFit="contain" />
+          <View style={styles.confirmationInfoCopy}>
+            <Text style={styles.confirmationInfoTitleMuted}>Card delivered safely</Text>
+            <Text style={styles.muted}>Pending delivery</Text>
+          </View>
+        </View>
+      </View>
+
+      <PrimaryButton onPress={onNext}>Back to your Order</PrimaryButton>
+    </View>
   );
 }
 
@@ -386,8 +414,13 @@ function Result({ onBack }: { onBack: () => void }) {
 
 export default function HomeScreen() {
   const [step, setStep] = useState<FlowStep>('basket');
+  const [selectedCircleCard, setSelectedCircleCard] = useState<number>(require('../../assets/designs/Choose your Circle card/Christmas Cheer.png'));
   const next = () => setStep(steps[Math.min(steps.indexOf(step) + 1, steps.length - 1)]);
   const previous = () => setStep(steps[Math.max(steps.indexOf(step) - 1, 0)]);
+  const chooseCircleCard = (cardImage: number) => {
+    setSelectedCircleCard(cardImage);
+    next();
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -395,9 +428,9 @@ export default function HomeScreen() {
         <Header step={step} />
         {step === 'basket' && <Basket onNext={next} />}
         {step === 'about' && <About onNext={next} onBack={previous} />}
-        {step === 'circle' && <ChooseCard onNext={next} onBack={previous} onBasket={() => setStep('basket')} />}
+        {step === 'circle' && <ChooseCard onNext={chooseCircleCard} onBack={previous} onBasket={() => setStep('basket')} />}
         {step === 'message' && <WriteMessage onNext={next} onBack={previous} />}
-        {step === 'matched' && <Matched onNext={next} onBack={previous} />}
+        {step === 'matched' && <Matched onNext={next} onBack={previous} cardImage={selectedCircleCard} />}
         {step === 'result' && <Result onBack={previous} />}
       </ScrollView>
     </SafeAreaView>
@@ -1125,6 +1158,133 @@ const styles = StyleSheet.create({
     color: INK,
     fontSize: 13,
     lineHeight: 18,
+    fontFamily: 'Moonpig-Bold',
+  },
+  confirmationScreen: {
+    flex: 1,
+    backgroundColor: BACKGROUND,
+    gap: 16,
+    paddingBottom: 24,
+  },
+  confirmationBanner: {
+    height: 56,
+    backgroundColor: '#ffa6b6',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  confirmationBack: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  confirmationBackText: {
+    color: BLUE,
+    fontSize: 20,
+    lineHeight: 22,
+    fontFamily: 'Moonpig-Bold',
+  },
+  confirmationBackIcon: {
+    width: 16,
+    height: 16,
+  },
+  confirmationBannerTitle: {
+    flex: 1,
+    color: '#fff',
+    fontSize: 20,
+    lineHeight: 26,
+    marginRight: 32,
+    marginLeft: 12,
+    fontFamily: 'Moonpig-Bold',
+  },
+  confirmationCardImage: {
+    width: 113,
+    height: 141,
+    alignSelf: 'center',
+    borderRadius: 4,
+  },
+  confirmationSuccess: {
+    alignSelf: 'center',
+    backgroundColor: '#ebfdf5',
+    borderRadius: 15,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  confirmationSuccessIcon: {
+    width: 16,
+    height: 16,
+  },
+  confirmationSuccessText: {
+    color: '#10794f',
+    fontSize: 12,
+    lineHeight: 16,
+    fontFamily: 'Moonpig-Bold',
+  },
+  confirmationInfoCard: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginHorizontal: 16,
+    padding: 16,
+    gap: 16,
+    borderWidth: 1,
+    borderColor: '#f0f1f3',
+  },
+  confirmationInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  confirmationInfoIcon: {
+    width: 24,
+    height: 24,
+  },
+  confirmationInfoCopy: {
+    flex: 1,
+    gap: 2,
+  },
+  confirmationInfoTitle: {
+    color: INK,
+    fontSize: 14,
+    lineHeight: 20,
+    fontFamily: 'Moonpig-Bold',
+  },
+  confirmationInfoTitleMuted: {
+    color: GREY,
+    fontSize: 14,
+    lineHeight: 20,
+    fontFamily: 'Moonpig-Bold',
+  },
+  confirmationMessage: {
+    marginHorizontal: 16,
+    gap: 4,
+  },
+  confirmationMessageTitle: {
+    color: INK,
+    fontSize: 16,
+    lineHeight: 22,
+    fontFamily: 'Moonpig-Bold',
+    textAlign: 'center',
+  },
+  confirmationMessageMuted: {
+    textAlign: 'center',
+  },
+  confirmationFooterInfo: {
+    backgroundColor: '#fff9eb',
+    marginHorizontal: 16,
+    borderRadius: 8,
+    padding: 14,
+    gap: 4,
+  },
+  confirmationFooterTitle: {
+    color: '#8a661d',
+    fontSize: 14,
+    lineHeight: 20,
     fontFamily: 'Moonpig-Bold',
   },
   blockedNotice: {
