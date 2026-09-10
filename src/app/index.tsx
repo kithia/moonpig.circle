@@ -443,39 +443,40 @@ function Result({ onBack, cardImage }: { onBack: () => void; cardImage: number }
         <View style={styles.orderSummaryBannerIconWrap}>
           <ExpoImage source={require('../../assets/designs/Order confirmation/mail-open.svg')} style={styles.orderSummaryBannerIcon} contentFit="contain" />
         </View>
-        <Text style={styles.orderSummaryBannerTitle}>Order confirmed</Text>
+        <Text style={styles.orderSummaryBannerTitle}>Your circle card</Text>
       </View>
 
       <View style={styles.orderSummaryContent}>
-        <Text style={styles.orderSummaryEyebrow}>ORDER SUMMARY</Text>
-        <Text style={styles.orderSummaryTitle}>Thank you for sending a little kindness</Text>
-        <Text style={styles.orderSummaryBody}>Your Circle card is on its way to someone who needs a little cheer.</Text>
+        <View style={styles.senderRow}>
+          <ExpoImage source={require('../../assets/designs/Order confirmation/mail-open.svg')} style={styles.senderIcon} contentFit="contain" />
+          <Text style={styles.senderText}>From: Maya, The North West</Text>
+        </View>
+
+        <Text style={styles.circleLabel}>Moonpig Circle</Text>
 
         <ExpoImage source={cardImage} style={styles.orderSummaryCardImage} contentFit="cover" />
 
-        <View style={styles.orderSummaryPrivacy}>
-          <ExpoImage source={require('../../assets/designs/Order confirmation/shield-check.svg')} style={styles.orderSummaryPrivacyIcon} contentFit="contain" />
-          <Text style={styles.orderSummaryPrivacyText}>Your address stays private</Text>
-        </View>
-
-        <View style={styles.orderSummaryInfoCard}>
-          <View style={styles.orderSummaryInfoRow}>
-            <ExpoImage source={require('../../assets/designs/Order confirmation/help-circle.svg')} style={styles.orderSummaryInfoIcon} contentFit="contain" />
-            <View style={styles.orderSummaryInfoCopy}>
-              <Text style={styles.orderSummaryInfoTitle}>What happens next?</Text>
-              <Text style={styles.muted}>We&apos;ll match your card with someone in the community and keep you updated.</Text>
-            </View>
-          </View>
-          <View style={styles.orderSummaryInfoRow}>
-            <ExpoImage source={require('../../assets/designs/Order confirmation/shield-check.svg')} style={styles.orderSummaryInfoIcon} contentFit="contain" />
-            <View style={styles.orderSummaryInfoCopy}>
-              <Text style={styles.orderSummaryInfoTitle}>Sent safely and anonymously</Text>
-              <Text style={styles.muted}>No personal details are shared with the recipient.</Text>
-            </View>
+        <View style={styles.messageSummaryBox}>
+          <Text style={styles.messageSummaryText}>Hi friend! I'm sending cozy rays of happiness from rainy Lancashire. I hope this card brings a smile to your face today. Remember you are appreciated!</Text>
+          <View style={styles.messageSummaryFooter}>
+            <Text style={styles.messageSummaryFooterText}>Sent safely through Circle Stamp Post</Text>
+            <ExpoImage source={require('../../assets/designs/Order confirmation/shield-check.svg')} style={styles.messageSummaryBadge} contentFit="contain" />
           </View>
         </View>
 
-        <PrimaryButton onPress={onBack}>Back to your order</PrimaryButton>
+        <View style={styles.orderSummaryDisclaimer}>
+          <ExpoImage source={require('../../assets/designs/Order confirmation/help-circle.svg')} style={styles.orderSummaryInfoIcon} contentFit="contain" />
+          <Text style={styles.orderSummaryDisclaimerText}>Direct messaging is not available - replies are sent as cards.</Text>
+        </View>
+
+        <Pressable onPress={() => undefined} style={styles.anonymousReplyButton}>
+          <Text style={styles.anonymousReplyButtonText}>Send an Anonymous Reply</Text>
+        </Pressable>
+        <View style={styles.resultActions}>
+          <Text style={styles.resultActionText}>Report Card</Text>
+          <View style={styles.resultActionDivider} />
+          <Text style={styles.resultActionText}>Block Member</Text>
+        </View>
       </View>
     </View>
   );
@@ -1699,11 +1700,124 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Moonpig-Regular',
   },
+  senderRow: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 4,
+    gap: 8,
+  },
+  senderText: {
+    color: INK,
+    fontSize: 15,
+    lineHeight: 22,
+    fontFamily: 'Moonpig-Bold',
+  },
+  senderIcon: {
+    width: 16,
+    height: 16,
+  },
+  circleLabel: {
+    backgroundColor: '#f9c406',
+    color: INK,
+    borderRadius: 15,
+    paddingHorizontal: 20,
+    paddingVertical: 7,
+    fontSize: 14,
+    lineHeight: 18,
+    fontFamily: 'Moonpig-Bold',
+  },
   orderSummaryCardImage: {
     width: 202,
     height: 253,
     borderRadius: 4,
     marginVertical: 4,
+  },
+  messageSummaryBox: {
+    alignSelf: 'stretch',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    gap: 18,
+    borderWidth: 1,
+    borderColor: '#e8e8e8',
+  },
+  messageSummaryText: {
+    color: INK,
+    fontSize: 16,
+    lineHeight: 24,
+    fontFamily: 'Moonpig-Regular',
+  },
+  messageSummaryFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f1f3',
+  },
+  messageSummaryFooterText: {
+    color: GREY,
+    fontSize: 12,
+    lineHeight: 18,
+    fontFamily: 'Moonpig-Regular',
+  },
+  messageSummaryBadge: {
+    width: 14,
+    height: 14,
+  },
+  orderSummaryDisclaimer: {
+    alignSelf: 'stretch',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+  },
+  orderSummaryDisclaimerText: {
+    flex: 1,
+    color: GREY,
+    fontSize: 13,
+    lineHeight: 19,
+    fontFamily: 'Moonpig-Regular',
+  },
+  anonymousReplyButton: {
+    alignSelf: 'stretch',
+    minHeight: 52,
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: BLUE,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 18,
+  },
+  anonymousReplyButtonText: {
+    color: BLUE,
+    fontSize: 15,
+    lineHeight: 20,
+    fontFamily: 'Moonpig-Bold',
+  },
+  resultActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 14,
+    paddingTop: 2,
+  },
+  resultActionText: {
+    color: GREY,
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: 'Moonpig-Regular',
+    textDecorationLine: 'underline',
+  },
+  resultActionDivider: {
+    width: 1,
+    height: 16,
+    backgroundColor: '#b8b8b8',
   },
   orderSummaryPrivacy: {
     backgroundColor: '#ebfdf5',
