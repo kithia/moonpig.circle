@@ -783,8 +783,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 6,
-    marginBottom: 6,
+    marginTop: 18,
+    marginBottom: 12,
     paddingHorizontal: 16,
   },
   sectionHeading: {
