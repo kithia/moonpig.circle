@@ -313,7 +313,14 @@ function WriteMessage({ onNext, onBack }: { onNext: () => void; onBack: () => vo
   return (
     <Screen onBack={onBack} eyebrow="Step 3 of 3" title="Write your message">
       <Text style={styles.body}>Select a friendly card template. All cards are pre-designed curated illustrations.</Text>
-      <Text style={styles.label}>To: Someone in the North West</Text>
+      <View style={styles.recipientRow}>
+        <ExpoImage source={require('../../assets/designs/Write your message/circle-x.svg')} style={styles.recipientIcon} contentFit="contain" />
+        <Text style={[styles.label, styles.recipientLabel]}>To: Someone in the North West</Text>
+        <View style={styles.messageStamp}>
+          <ExpoImage source={require('../../assets/designs/Write your message/badge-check.svg')} style={styles.messageStampIcon} contentFit="contain" />
+          <Text style={styles.messageStampText}>CIRCLE STAMP</Text>
+        </View>
+      </View>
 
       <View style={styles.messageBox}>
         <TextInput
@@ -334,13 +341,19 @@ function WriteMessage({ onNext, onBack }: { onNext: () => void; onBack: () => vo
       </View>
 
       <View style={styles.notice}>
-        <Text style={styles.noticeTitle}>Safe communication</Text>
-        <Text style={styles.muted}>Keep your note positive and kind. Personal details are not shared.</Text>
+        <ExpoImage source={require('../../assets/designs/Write your message/shield.svg')} style={styles.disclaimerIcon} contentFit="contain" />
+        <View style={styles.disclaimerCopy}>
+          <Text style={styles.noticeTitle}>Safe communication</Text>
+          <Text style={styles.muted}>To keep everyone safe, contact details, social media handles and address indicators can't be shared.</Text>
+        </View>
       </View>
 
       <View style={styles.blockedNotice}>
-        <Text style={styles.blockedNoticeTitle}>BLOCKED</Text>
-        <Text style={styles.blockedNoticeText}>Messages containing personal details or inappropriate content may be blocked.</Text>
+        <ExpoImage source={require('../../assets/designs/Write your message/alert-triangle.svg')} style={styles.disclaimerIcon} contentFit="contain" />
+        <View style={styles.disclaimerCopy}>
+          <Text style={styles.blockedNoticeTitle}>BLOCKED</Text>
+          <Text style={styles.blockedNoticeText}>Messages containing phoone numbers or social media handles will not be sent.</Text>
+        </View>
       </View>
 
       <PrimaryButton onPress={onNext}>Send card</PrimaryButton>
@@ -1310,6 +1323,38 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontFamily: 'Moonpig-Bold',
   },
+  messageStamp: {
+    alignSelf: 'flex-start',
+    backgroundColor: BLUE_SOFT,
+    borderRadius: 11,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  messageStampIcon: {
+    width: 14,
+    height: 14,
+  },
+  messageStampText: {
+    color: BLUE,
+    fontSize: 12,
+    lineHeight: 16,
+    fontFamily: 'Moonpig-Bold',
+  },
+  recipientRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  recipientLabel: {
+    flex: 1,
+  },
+  recipientIcon: {
+    width: 16,
+    height: 16,
+  },
   messageBox: {
     minHeight: 152,
     borderWidth: 1,
@@ -1358,8 +1403,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 12,
-    gap: 4,
+    gap: 10,
     borderWidth: 0,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  disclaimerIcon: {
+    width: 18,
+    height: 18,
+  },
+  disclaimerCopy: {
+    flex: 1,
+    gap: 4,
   },
   noticeTitle: {
     color: INK,
@@ -1498,9 +1553,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff8dc',
     borderRadius: 10,
     padding: 12,
-    gap: 4,
+    gap: 10,
     borderWidth: 1,
     borderColor: '#f2df88',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   blockedNoticeTitle: {
     color: '#8A661D',
