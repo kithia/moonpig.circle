@@ -1,3 +1,4 @@
+import { Image as ExpoImage } from 'expo-image';
 import { useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -40,10 +41,10 @@ function Header({ step }: { step: FlowStep }) {
   );
 }
 
-function PrimaryButton({ children, onPress, disabled = false }: { children: string; onPress?: () => void; disabled?: boolean }) {
+function PrimaryButton({ children, onPress, disabled = false, mutedDisabled = false }: { children: string; onPress?: () => void; disabled?: boolean; mutedDisabled?: boolean }) {
   if (disabled) {
     return (
-      <Pressable onPress={() => undefined} style={({ pressed }) => [styles.primaryButton, styles.primaryButtonDisabled, pressed && styles.pressed]}>
+      <Pressable onPress={() => undefined} accessibilityState={{ disabled: true }} style={({ pressed }) => [styles.primaryButton, styles.primaryButtonDisabled, mutedDisabled && styles.primaryButtonMuted, pressed && styles.pressed]}>
         <Text style={styles.primaryButtonText}>{children}</Text>
       </Pressable>
     );
@@ -198,6 +199,8 @@ Hedwig™ at`}</Text>
 }
 
 function About({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+  const [isGuidelinesAccepted, setGuidelinesAccepted] = useState(false);
+
   return (
     <Screen onBack={onBack} eyebrow="Step 1 of 4" title="About Moonpig Circle">
       <Text style={styles.body}>
@@ -206,17 +209,42 @@ function About({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
       </Text>
 
       <View style={styles.infoCard}>
-        <Text style={styles.infoIcon}>♡</Text>
-        <Text style={styles.infoTitle}>A card with a purpose</Text>
-        <Text style={styles.muted}>Your card will be sent anonymously to someone in the community.</Text>
+        <View style={styles.infoRow}>
+          <ExpoImage source={require('../../assets/designs/Lock-icon.svg')} style={styles.infoIcon} contentFit="contain" />
+          <View style={styles.infoCopy}>
+            <Text style={styles.infoTitle}>A card with a purpose</Text>
+            <Text style={styles.muted}>Your card will be sent anonymously to someone in the community.</Text>
+          </View>
+        </View>
+        <View style={styles.infoRow}>
+          <ExpoImage source={require('../../assets/designs/Cross-icon.svg')} style={styles.infoIcon} contentFit="contain" />
+          <View style={styles.infoCopy}>
+            <Text style={styles.infoTitle}>No personal details shared</Text>
+            <Text style={styles.muted}>Keep your connection kind, private, and anonymous.</Text>
+          </View>
+        </View>
       </View>
 
-      <View style={styles.checkRow}>
-        <Text style={styles.checkbox}>✓</Text>
+      <Pressable
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked: isGuidelinesAccepted }}
+        onPress={() => setGuidelinesAccepted((accepted) => !accepted)}
+        style={styles.checkRow}
+      >
+        <Text style={[styles.checkbox, isGuidelinesAccepted && styles.checkboxChecked]}>{isGuidelinesAccepted ? '✓' : ''}</Text>
         <Text style={styles.muted}>I agree to the Circle guidelines</Text>
-      </View>
+      </Pressable>
 
-      <PrimaryButton onPress={onNext}>Continue</PrimaryButton>
+      <View style={styles.aboutActions}>
+        <Pressable onPress={onBack} style={styles.secondaryButton}>
+          <Text style={styles.secondaryButtonText}>Not now</Text>
+        </Pressable>
+        <View style={styles.aboutContinue}>
+          <PrimaryButton onPress={onNext} disabled={!isGuidelinesAccepted} mutedDisabled>
+            Continue
+          </PrimaryButton>
+        </View>
+      </View>
     </Screen>
   );
 }
@@ -588,7 +616,7 @@ const styles = StyleSheet.create({
   },
   secondaryActionText: {
     flex: 1,
-    color: '#d5627d',
+    color: '#C22F50',
     fontSize: 15,
     lineHeight: 18,
     fontFamily: 'Moonpig-Bold',
@@ -752,6 +780,9 @@ const styles = StyleSheet.create({
     backgroundColor: BLUE,
     opacity: 1,
   },
+  primaryButtonMuted: {
+    backgroundColor: '#b9c0cb',
+  },
   primaryButtonText: {
     color: '#fff',
     fontSize: 15,
@@ -769,11 +800,18 @@ const styles = StyleSheet.create({
     padding: 18,
     gap: 8,
   },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  infoCopy: {
+    flex: 1,
+    gap: 4,
+  },
   infoIcon: {
-    color: PINK,
-    fontSize: 28,
-    lineHeight: 28,
-    fontFamily: 'Moonpig-Regular',
+    width: 32,
+    height: 32,
   },
   infoTitle: {
     color: INK,
@@ -788,8 +826,10 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   checkbox: {
-    color: '#fff',
-    backgroundColor: BLUE,
+    color: GREY,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#b9c0cb',
     borderRadius: 6,
     width: 21,
     height: 21,
@@ -798,6 +838,36 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Moonpig-Bold',
     overflow: 'hidden',
+  },
+  checkboxChecked: {
+    color: '#fff',
+    backgroundColor: BLUE,
+    borderColor: BLUE,
+  },
+  aboutActions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  secondaryButton: {
+    flex: 1,
+    backgroundColor: '#fff',
+    minHeight: 52,
+    borderWidth: 1,
+    borderColor: BLUE,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    marginTop: 4,
+  },
+  secondaryButtonText: {
+    color: BLUE,
+    fontSize: 15,
+    lineHeight: 18,
+    fontFamily: 'Moonpig-Bold',
+  },
+  aboutContinue: {
+    flex: 1,
   },
   optionCard: {
     backgroundColor: CARD,
