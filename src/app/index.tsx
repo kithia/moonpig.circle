@@ -250,28 +250,45 @@ function About({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
 }
 
 function ChooseCard({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+  const [selectedCard, setSelectedCard] = useState(0);
+  const cards = [
+    { title: 'Winter Wishes', image: require('../../assets/designs/Winter Wishes.png') },
+    { title: 'Sunshine Holiday', image: require('../../assets/designs/Sunshine Holiday.png') },
+    { title: 'Postcard from Away', image: require('../../assets/designs/Postcard from Away.png') },
+    { title: 'Christmas Cheer', image: require('../../assets/designs/Christmas Cheer.png') },
+  ];
+
   return (
     <Screen onBack={onBack} eyebrow="Step 2 of 4" title="Choose your Circle card">
       <Text style={styles.body}>Pick a card that feels right. Your words will be added next.</Text>
 
-      <Pressable style={[styles.optionCard, styles.selected]} onPress={onNext}>
-        <CardArt />
-        <View style={styles.optionCopy}>
-          <Text style={styles.optionTitle}>Warm wishes</Text>
-          <Text style={styles.muted}>A bright hello for someone special</Text>
-        </View>
-        <Text style={styles.radio}>●</Text>
-      </Pressable>
+      <View style={styles.cardGrid}>
+        {cards.map((card, index) => {
+          const isSelected = selectedCard === index;
 
-      <Pressable style={styles.optionCard} onPress={onNext}>
-        <CardArt alt />
-        <View style={styles.optionCopy}>
-          <Text style={styles.optionTitle}>Ray of sunshine</Text>
-          <Text style={styles.muted}>A little light for their day</Text>
-        </View>
-        <Text style={styles.radioEmpty}>○</Text>
-      </Pressable>
+          return (
+            <Pressable
+              key={card.title}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: isSelected }}
+              onPress={() => setSelectedCard(index)}
+              style={[styles.cardOption, isSelected && styles.cardOptionSelected]}
+            >
+              <ExpoImage source={card.image} style={styles.circleCardImage} contentFit="cover" />
+              <Text style={styles.circleCardTitle}>{card.title}</Text>
+              {isSelected && (
+                <View style={styles.cardSelectedBadge}>
+                  <Text style={styles.cardSelectedTick}>✓</Text>
+                </View>
+              )}
+            </Pressable>
+          );
+        })}
+      </View>
 
+      <Pressable onPress={onBack} style={styles.fullWidthSecondaryButton}>
+        <Text style={styles.secondaryButtonText}>Not now</Text>
+      </Pressable>
       <PrimaryButton onPress={onNext}>Continue</PrimaryButton>
     </Screen>
   );
@@ -868,6 +885,64 @@ const styles = StyleSheet.create({
   },
   aboutContinue: {
     flex: 1,
+  },
+  cardGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 16,
+  },
+  cardOption: {
+    width: '47.5%',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#f0f1f3',
+    borderRadius: 8,
+    overflow: 'hidden',
+    paddingBottom: 12,
+    position: 'relative',
+  },
+  cardOptionSelected: {
+    borderColor: '#C22F50',
+    borderWidth: 2,
+  },
+  circleCardImage: {
+    width: '100%',
+    aspectRatio: 166 / 220,
+  },
+  circleCardTitle: {
+    color: INK,
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: 'Moonpig-Bold',
+    paddingHorizontal: 10,
+    paddingTop: 9,
+  },
+  cardSelectedBadge: {
+    position: 'absolute',
+    top: 9,
+    right: 9,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#C22F50',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardSelectedTick: {
+    color: '#fff',
+    fontSize: 14,
+    lineHeight: 18,
+    fontFamily: 'Moonpig-Bold',
+  },
+  fullWidthSecondaryButton: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#f0f1f3',
+    borderRadius: 8,
+    minHeight: 38,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 18,
   },
   optionCard: {
     backgroundColor: CARD,
