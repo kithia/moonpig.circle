@@ -23,22 +23,9 @@ function Header({ step }: { step: FlowStep }) {
 
   return (
     <View style={styles.header}>
-      <View style={styles.statusRow}>
-        <Text style={styles.statusText}>9:41</Text>
-        <View style={styles.statusIcons}>
-          <Text style={styles.statusDot}>◔</Text>
-          <Text style={styles.statusDot}>◍</Text>
-          <Text style={styles.statusDot}>◉</Text>
-        </View>
-      </View>
       <View style={styles.headerRow}>
         <Text style={styles.menu}>☰</Text>
         <Text style={styles.logo}>moonpig</Text>
-        <View style={styles.headerActions}>
-          <Text style={styles.headerIcon}>◫</Text>
-          <Text style={styles.headerIcon}>♡</Text>
-          <Text style={styles.headerIcon}>◌</Text>
-        </View>
       </View>
       {isBasket ? (
         <View style={styles.searchWrap}>
@@ -393,6 +380,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     minHeight: 36,
+    position: 'relative',
   },
   menu: {
     fontSize: 25,
@@ -402,11 +390,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Moonpig-Regular',
   },
   logo: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    textAlign: 'center',
     color: PINK,
     fontSize: 23,
     fontFamily: 'Moonpig-Bold',
     letterSpacing: -0.8,
-    marginLeft: 10,
   },
   headerActions: {
     marginLeft: 'auto',
