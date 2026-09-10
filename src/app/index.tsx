@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type FlowStep = 'basket' | 'about' | 'circle' | 'message' | 'matched' | 'result';
@@ -108,7 +108,11 @@ function Basket({ onNext }: { onNext: () => void }) {
 
       <View style={styles.basketItem}>
         <View style={styles.cardThumbWrap}>
-          <CardArt small />
+          <Image
+            source={require('../../assets/designs/Harry Potter.jpg')}
+            resizeMode="cover"
+            style={styles.cardThumb}
+          />
         </View>
         <View style={styles.itemCopy}>
           <Text style={styles.itemTitle}>Happy Potter Birthday Card</Text>
@@ -121,6 +125,23 @@ function Basket({ onNext }: { onNext: () => void }) {
           </View>
         </View>
       </View>
+
+      <View style={styles.total}>
+        <View style={styles.totalRow}>
+          <Text style={styles.muted}>Items total</Text>
+          <Text style={styles.price}>£6.99</Text>
+        </View>
+        <View style={styles.totalRow}>
+          <Text style={styles.muted}>Postage costs</Text>
+          <Text style={styles.muted}>Calculated at checkout</Text>
+        </View>
+        <View style={styles.totalRow}>
+          <Text style={styles.totalLabel}>Total</Text>
+          <Text style={styles.totalLabel}>£6.99</Text>
+        </View>
+      </View>
+
+      <PrimaryButton disabled>Checkout</PrimaryButton>
 
       <View style={styles.promoCard}>
         <Text style={styles.promoTag}>Moonpig Circle</Text>
@@ -164,6 +185,11 @@ Hedwig™ at`}</Text>
         </Pressable>
       </View>
 
+      <Pressable style={styles.discountRow}>
+        <Text style={styles.discountText}>Add a discount code</Text>
+        <Text style={styles.discountChevron}>›</Text>
+      </Pressable>
+
       <View style={styles.total}>
         <View style={styles.totalRow}>
           <Text style={styles.muted}>Items total</Text>
@@ -171,18 +197,13 @@ Hedwig™ at`}</Text>
         </View>
         <View style={styles.totalRow}>
           <Text style={styles.muted}>Postage costs</Text>
-          <Text style={styles.muted}>£2.50</Text>
+          <Text style={styles.muted}>Calculated at checkout</Text>
         </View>
         <View style={styles.totalRow}>
           <Text style={styles.totalLabel}>Total</Text>
-          <Text style={styles.totalLabel}>£9.49</Text>
+          <Text style={styles.totalLabel}>£6.99</Text>
         </View>
       </View>
-
-      <Pressable style={styles.discountRow}>
-        <Text style={styles.discountText}>Add a discount code</Text>
-        <Text style={styles.discountChevron}>›</Text>
-      </Pressable>
 
       <PrimaryButton disabled>Checkout</PrimaryButton>
     </View>
@@ -497,7 +518,18 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
   },
   cardThumbWrap: {
+    width: 88,
+    height: 88,
+    borderRadius: 12,
+    overflow: 'hidden',
     marginRight: 14,
+    backgroundColor: '#f4f4f4',
+    borderWidth: 1,
+    borderColor: '#eceef2',
+  },
+  cardThumb: {
+    width: '100%',
+    height: '100%',
   },
   itemCopy: {
     flex: 1,
