@@ -28,6 +28,7 @@ export default function TabLayout() {
     'Moonpig-Light': require('../../assets/font/moonpig-light.ttf'),
     'Moonpig-Regular': require('../../assets/font/moonpig-regular.ttf'),
     'Moonpig-Bold': require('../../assets/font/moonpig-bold.ttf'),
+    'CaveatBrush-Regular': require('../../assets/font/CaveatBrush-Regular.ttf'),
   });
 
   useEffect(() => {

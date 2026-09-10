@@ -1745,9 +1745,9 @@ const styles = StyleSheet.create({
   },
   messageSummaryText: {
     color: INK,
-    fontSize: 16,
-    lineHeight: 24,
-    fontFamily: 'Moonpig-Regular',
+    fontSize: 18,
+    lineHeight: 27,
+    fontFamily: 'CaveatBrush-Regular',
   },
   messageSummaryFooter: {
     flexDirection: 'row',
