@@ -1,6 +1,6 @@
 import { Image as ExpoImage } from 'expo-image';
 import { useState } from 'react';
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type FlowStep = 'basket' | 'about' | 'circle' | 'message' | 'matched' | 'result';
@@ -305,21 +305,39 @@ function ChooseCard({ onNext, onBack, onBasket }: { onNext: () => void; onBack: 
 }
 
 function WriteMessage({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+  const [message, setMessage] = useState('Sending you a little sunshine today. I hope this card brings a smile to your face.');
+
   return (
     <Screen onBack={onBack} eyebrow="Step 3 of 3" title="Write your message">
-      <Text style={styles.body}>Say something kind. Your message will be sent anonymously.</Text>
+      <Text style={styles.body}>Select a friendly card template. All cards are pre-designed curated illustrations.</Text>
       <Text style={styles.label}>To someone in the North West</Text>
 
       <View style={styles.messageBox}>
-        <Text style={styles.messageText}>
-          Sending you a little sunshine today. I hope this card brings a smile to your face.
-        </Text>
-        <Text style={styles.counter}>82 / 250</Text>
+        <TextInput
+          accessibilityLabel="Message"
+          multiline
+          maxLength={250}
+          onChangeText={setMessage}
+          placeholder="Write something kind..."
+          placeholderTextColor="#8a93a3"
+          style={styles.messageTextInput}
+          textAlignVertical="top"
+          value={message}
+        />
+        <View style={styles.messageFooter}>
+          <Text style={styles.messageHint}>Keep it safe and warm</Text>
+          <Text style={styles.counter}>{message.length} / 250</Text>
+        </View>
       </View>
 
       <View style={styles.notice}>
         <Text style={styles.noticeTitle}>Safe communication</Text>
         <Text style={styles.muted}>Keep your note positive and kind. Personal details are not shared.</Text>
+      </View>
+
+      <View style={styles.blockedNotice}>
+        <Text style={styles.blockedNoticeTitle}>BLOCKED</Text>
+        <Text style={styles.blockedNoticeText}>Messages containing personal details or inappropriate content may be blocked.</Text>
       </View>
 
       <PrimaryButton onPress={onNext}>Send card</PrimaryButton>
@@ -1069,6 +1087,15 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontFamily: 'Moonpig-Regular',
   },
+  messageTextInput: {
+    flex: 1,
+    minHeight: 96,
+    color: INK,
+    fontSize: 16,
+    lineHeight: 24,
+    fontFamily: 'Moonpig-Regular',
+    padding: 0,
+  },
   counter: {
     color: '#8a93a3',
     fontSize: 11,
@@ -1076,7 +1103,31 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontFamily: 'Moonpig-Regular',
   },
+  messageFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  messageHint: {
+    color: '#8a93a3',
+    fontSize: 11,
+    lineHeight: 14,
+    fontFamily: 'Moonpig-Regular',
+  },
   notice: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 12,
+    gap: 4,
+    borderWidth: 0,
+  },
+  noticeTitle: {
+    color: INK,
+    fontSize: 13,
+    lineHeight: 18,
+    fontFamily: 'Moonpig-Bold',
+  },
+  blockedNotice: {
     backgroundColor: '#fff8dc',
     borderRadius: 10,
     padding: 12,
@@ -1084,11 +1135,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#f2df88',
   },
-  noticeTitle: {
-    color: INK,
+  blockedNoticeTitle: {
+    color: '#8A661D',
     fontSize: 13,
     lineHeight: 18,
     fontFamily: 'Moonpig-Bold',
+  },
+  blockedNoticeText: {
+    color: '#8A661D',
+    fontSize: 12,
+    lineHeight: 18,
+    fontFamily: 'Moonpig-Regular',
   },
   matchPanel: {
     backgroundColor: '#fff',
