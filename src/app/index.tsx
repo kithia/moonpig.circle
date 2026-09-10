@@ -437,7 +437,7 @@ function Matched({ cardImage, onCheckout }: { cardImage: number; onCheckout: () 
         <Text style={styles.discountChevron}>›</Text>
       </Pressable>
 
-      <PrimaryButton onPress={onCheckout}>Checkout</PrimaryButton>
+      <PrimaryButton onPress={() => undefined}>Checkout</PrimaryButton>
     </View>
   );
 }
