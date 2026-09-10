@@ -716,7 +716,7 @@ const styles = StyleSheet.create({
   },
   plusButton: {
     backgroundColor: '#fff',
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: BLUE,
     borderRadius: 8,
     paddingVertical: 10,
@@ -852,7 +852,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     minHeight: 52,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: BLUE,
     borderRadius: 10,
     justifyContent: 'center',
