@@ -310,7 +310,7 @@ function WriteMessage({ onNext, onBack }: { onNext: () => void; onBack: () => vo
   return (
     <Screen onBack={onBack} eyebrow="Step 3 of 3" title="Write your message">
       <Text style={styles.body}>Select a friendly card template. All cards are pre-designed curated illustrations.</Text>
-      <Text style={styles.label}>To someone in the North West</Text>
+      <Text style={styles.label}>To: Someone in the North West</Text>
 
       <View style={styles.messageBox}>
         <TextInput
