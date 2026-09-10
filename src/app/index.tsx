@@ -116,7 +116,7 @@ function Basket({ onNext }: { onNext: () => void }) {
           <Text style={styles.muted}>To: Sarah</Text>
           <Text style={styles.muted}>Standard delivery · 1st Class</Text>
           <View style={styles.itemMetaRow}>
-            <Text style={styles.price}>£6.99</Text>
+            <Text style={[styles.price, styles.itemPrice]}>£6.99</Text>
             <Text style={styles.inlineLink}>Edit</Text>
             <Text style={styles.inlineLink}>Remove</Text>
           </View>
@@ -352,8 +352,13 @@ function Matched({ cardImage }: { cardImage: number }) {
   return (
     <View style={styles.circleBasketScreen}>
       <View style={styles.circleAddedBanner}>
-        <ExpoImage source={require('../../assets/designs/Basket with Circle Card/badge-check.svg')} style={styles.circleAddedIcon} contentFit="contain" />
+        <ExpoImage source={require('../../assets/designs/Basket with Circle Card/check.svg')} style={styles.circleAddedIcon} contentFit="contain" />
         <Text style={styles.circleAddedText}>Circle card added to your basket</Text>
+      </View>
+
+      <View style={styles.circleBasketHeaderRow}>
+        <Text style={styles.sectionHeading}>Basket</Text>
+        <Text style={styles.itemCount}>2 items</Text>
       </View>
 
       <View style={styles.circleBasketItem}>
@@ -365,7 +370,7 @@ function Matched({ cardImage }: { cardImage: number }) {
           <Text style={styles.muted}>To: Sarah</Text>
           <Text style={styles.muted}>Standard delivery · 1st Class</Text>
           <View style={styles.itemMetaRow}>
-            <Text style={styles.price}>£6.99</Text>
+            <Text style={[styles.price, styles.itemPrice]}>£6.99</Text>
             <Text style={styles.inlineLink}>Edit</Text>
             <Text style={styles.inlineLink}>Remove</Text>
           </View>
@@ -377,12 +382,14 @@ function Matched({ cardImage }: { cardImage: number }) {
           <ExpoImage source={cardImage} resizeMode="cover" style={styles.cardThumb} contentFit="cover" />
         </View>
         <View style={styles.itemCopy}>
+          <View style={styles.circleStamp}>
+            <ExpoImage source={require('../../assets/designs/Basket with Circle Card/badge-check.svg')} style={styles.circleStampIcon} contentFit="contain" />
+            <Text style={styles.circleStampText}>CIRCLE STAMP</Text>
+          </View>
           <Text style={styles.itemTitle}>Moonpig Circle card</Text>
-          <Text style={styles.muted}>To: Someone in the North West</Text>
-          <Text style={styles.muted}>Matched within 48 hours</Text>
+          <Text style={styles.muted}>Surprise card to a stranger</Text>
           <View style={styles.itemMetaRow}>
-            <Text style={styles.price}>£1.99</Text>
-            <Text style={styles.inlineLink}>Edit</Text>
+            <Text style={[styles.price, styles.itemPrice]}>£4.99</Text>
             <Text style={styles.inlineLink}>Remove</Text>
           </View>
         </View>
@@ -398,20 +405,18 @@ function Matched({ cardImage }: { cardImage: number }) {
           </View>
           <Text style={styles.deliveryChevron}>›</Text>
         </View>
+        <View style={styles.total}>
+          <View style={styles.totalRow}><Text style={styles.muted}>Items total</Text><Text style={styles.price}>£11.98</Text></View>
+          <View style={styles.totalRow}><Text style={styles.muted}>Postage costs</Text><Text style={styles.muted}>Calculated at checkout</Text></View>
+          <View style={styles.summaryRule} />
+          <View style={styles.totalRow}><Text style={styles.totalLabel}>Total</Text><Text style={styles.totalLabel}>£11.98</Text></View>
+        </View>
       </View>
 
-      <View style={styles.circleBasketPromo}>
-        <Text style={styles.circleBasketPromoTitle}>Moonpig Circle</Text>
-        <Text style={styles.circleBasketPromoBody}>A little kindness can make someone&apos;s day.</Text>
-        <Text style={styles.circleBasketPromoText}>Your card will be sent anonymously to someone in the community.</Text>
-      </View>
-
-      <View style={styles.circleBasketSummary}>
-        <View style={styles.totalRow}><Text style={styles.muted}>Items total</Text><Text style={styles.price}>£8.98</Text></View>
-        <View style={styles.totalRow}><Text style={styles.muted}>Postage costs</Text><Text style={styles.muted}>Calculated at checkout</Text></View>
-        <View style={styles.summaryRule} />
-        <View style={styles.totalRow}><Text style={styles.totalLabel}>Total</Text><Text style={styles.totalLabel}>£8.98</Text></View>
-      </View>
+      <Pressable style={styles.circleDiscountRow}>
+        <Text style={styles.discountText}>Add a discount code</Text>
+        <Text style={styles.discountChevron}>›</Text>
+      </Pressable>
 
       <PrimaryButton disabled>Checkout</PrimaryButton>
     </View>
@@ -694,6 +699,16 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontFamily: 'Moonpig-Regular',
   },
+  circleDiscountRow: {
+    backgroundColor: '#fff',
+    minHeight: 42,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: LINE,
+  },
   circleBasketPromo: {
     backgroundColor: PINK_SOFT,
     margin: 16,
@@ -751,6 +766,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 6,
   },
+  circleBasketHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 6,
+    marginBottom: 6,
+    paddingHorizontal: 16,
+  },
   sectionHeading: {
     color: INK,
     fontSize: 22,
@@ -800,11 +823,34 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     fontFamily: 'Moonpig-Bold',
   },
+  circleStamp: {
+    alignSelf: 'flex-start',
+    backgroundColor: BLUE_SOFT,
+    borderRadius: 9,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  circleStampIcon: {
+    width: 12,
+    height: 12,
+  },
+  circleStampText: {
+    color: BLUE,
+    fontSize: 11,
+    lineHeight: 14,
+    fontFamily: 'Moonpig-Bold',
+  },
   itemMetaRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
     marginTop: 2,
+  },
+  itemPrice: {
+    flex: 1,
   },
   muted: {
     color: GREY,
